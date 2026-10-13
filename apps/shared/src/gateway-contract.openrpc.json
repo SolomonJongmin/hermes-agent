@@ -2083,7 +2083,7 @@
         {
           "name": "params",
           "schema": {
-            "$ref": "#/components/schemas/Params"
+            "$ref": "#/components/schemas/OnboardingStateParams"
           }
         }
       ],
@@ -20315,7 +20315,7 @@
       },
       "OnboardingRunStateResult": {
         "additionalProperties": false,
-        "description": "``run``: onboarding opens on this launch (root config ``onboarding.run``, else a fresh\ninstall). ``eligible``: the free tier is on for this backend (``anon_auth.guest_enabled``).\n``session_id``: the stored id of the onboarding chat still in progress, so a relaunch reopens it;\n``run_id``: that run's id, which ``onboarding.ended`` names.",
+        "description": "``run``: onboarding opens on this launch (root config ``onboarding.run``, else a machine that\nnever used Hermes). ``eligible``: this is the desktop's local backend and the welcome trial or a\nconfigured provider can carry the first chat.\n``session_id``: the stored id of the onboarding chat still in progress, so a relaunch reopens it;\n``run_id``: that run's id, which ``onboarding.ended`` names.",
         "properties": {
           "run": {
             "title": "Run",
@@ -20419,11 +20419,16 @@
       },
       "OnboardingStartParams": {
         "additionalProperties": false,
-        "description": "``rerun``: start a new onboarding chat even when one is in progress (Settings, Run onboarding\nagain). ``facts_source``: whether the backend runs on the user's own computer. ``locale``: the\ndesktop's UI language, preferred over the backend OS locale.",
+        "description": "``rerun``: start a new onboarding chat even when one is in progress (Settings, Run onboarding\nagain; it never claims the welcome trial). ``facts_source``: whether the backend runs on the user's\nown computer. ``locale``: the desktop's UI language, preferred over the backend OS locale.\n``assume_fresh``: as on ``onboarding.state``. A new run on a first install claims the welcome\ntrial before the chat exists; a failed claim is error 5079 and writes nothing.",
         "properties": {
           "rerun": {
             "default": false,
             "title": "Rerun",
+            "type": "boolean"
+          },
+          "assume_fresh": {
+            "default": false,
+            "title": "Assume Fresh",
             "type": "boolean"
           },
           "facts_source": {
@@ -20474,6 +20479,19 @@
           "run_id"
         ],
         "title": "OnboardingStartResult",
+        "type": "object"
+      },
+      "OnboardingStateParams": {
+        "additionalProperties": false,
+        "description": "``assume_fresh``: the unpackaged desktop's ``--fresh-install`` launch; the backend treats this\nmachine as one that never used Hermes. Packaged builds never send it.",
+        "properties": {
+          "assume_fresh": {
+            "default": false,
+            "title": "Assume Fresh",
+            "type": "boolean"
+          }
+        },
+        "title": "OnboardingStateParams",
         "type": "object"
       },
       "OpenRequestEntry": {
